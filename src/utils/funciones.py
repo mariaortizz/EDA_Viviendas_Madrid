@@ -52,6 +52,8 @@ def cardinalidad(df):
 
 def graficos_variables_cuant(data):
     ''''Funcuion para graficar las variables cuantitativas'''
+    media_color = 'r'
+    mediana_color = 'b'
     try:
         for columna in data.columns:
             print('--'*30)
