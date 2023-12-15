@@ -377,7 +377,7 @@ def prueba_normalidad_shapiro(data):
 def pair_plot(data):
     '''Funcion para ver graficamente como se comportan algunas de  las variables cuantitativas'''
     try:
-        df_cuant_pair_plot = data.select_dtypes(include = 'number').drop(columns=['annio_construccion'], axis=1)
+        df_cuant_pair_plot = data.select_dtypes(include = 'number').drop(columns=['annio_construccion', 'latitud', 'longitud'], axis=1)
         sns.pairplot(df_cuant_pair_plot, kind='reg', palette='husl', markers='.');
     except Exception as a:
         print(f"No pude analizar la variable por {a}")
