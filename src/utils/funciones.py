@@ -82,3 +82,22 @@ def graficos_variables_cuant(data):
             print('--'*30)
     except Exception as a:
         print(f"No puedo analizar la variable por este error {a}")
+
+def graficos_variables_cualit(data):
+    ''''Funcuion para graficar las variables cualitativas'''
+    try:
+        for columna in data.columns:
+            print('--'*50)
+            print(f"VARIABLE: {columna}\n")
+            if len(data[columna].dropna().unique()) > 1:
+                ax = sns.countplot(data= data.sort_values(by=columna), x= columna, palette='husl')
+                ax.set_xticklabels(data[columna].sort_values().unique(), rotation=90)
+                #se superponen los valores porque me da uns advertencia al aplicar este parametro, no sé como sacarla :)
+                plt.title(f"Conteo variable {columna}")
+                plt.show();
+            else:
+                print('No es necesario graficar porque tiene un solo valor dentro de la columna')
+            print(data[columna].value_counts())
+            print('--'*50)
+    except Exception as a:
+        print(f"No puedo analizar la variable por este error {a}")
