@@ -4,7 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-from scipy.stats import kurtosis, skew, probplot, shapiro
+from scipy.stats import kurtosis, skew, probplot, shapiro, spearmanr
 from geopy.geocoders import Nominatim
 import time
 import pandas as pd
@@ -491,3 +491,17 @@ def grafico_var1_var2(data, var1, var2):
         plt.title(f'Relación entre {var1} y {var2}')
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
+
+def prueba_corr_pearson(df, var1, var2):
+    try:
+        correlation_coefficient, p_value = spearmanr(df[var1], df[var2])
+        print(f"Coeficiente de correlación de Spearman: {correlation_coefficient}")
+        print(f"Valor p: {p_value}")
+
+        alpha = 0.05
+        if p_value < alpha:
+            print("Hay evidencia para rechazar la hipótesis nula; existe una correlación significativa.")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula; no se puede afirmar una correlación significativa.")
+    except Exception as a:
+        print(f"No pude evaluar la correlación por {a}")
