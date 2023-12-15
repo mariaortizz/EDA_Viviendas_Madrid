@@ -205,7 +205,7 @@ def sacar_metros_cuadrados_nuevos(data):
     ''''Funcion para rellenar los valores nulos de los metros cuadrados en base a el precio por metro cuadrado'''
     try:
         data.drop(columns=['metros_cuadrados'], axis= 1, inplace=True)
-        data['metros_cuadrados'] = (data['precio_compra'] / data['precio_compra_por_m2']).round()
+        data['metros_cuadrados'] = (data['precio_venta'] / data['precio_venta_por_m2']).round()
     except Exception as a:
         print(f"No pude tranformar el dataframe")
     return data
@@ -385,10 +385,10 @@ def pair_plot(data):
 def precio_cee(data):
     '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
     try: 
-        df_precio_compra_cee = data.groupby('cee', as_index=False).mean(numeric_only = True)
+        df_precio_venta_cee = data.groupby('cee', as_index=False).mean(numeric_only = True)
         ax = sns.catplot(x = 'cee', y='precio_venta_por_m2', hue = 'cee', kind= 'bar',
-        data=df_precio_compra_cee.sort_values(by='cee'), palette='husl');
-        ax.set_xticklabels(df_precio_compra_cee['cee'].sort_values().unique(), rotation=90)
+        data=df_precio_venta_cee.sort_values(by='cee'), palette='husl');
+        ax.set_xticklabels(df_precio_venta_cee['cee'].sort_values().unique(), rotation=90)
         plt.title('Relación entre CEE y Precio de venta por metros cuadrados')
     except Exception as a:
         print(f"No pude analizar la variable por {a}")
@@ -396,9 +396,9 @@ def precio_cee(data):
 def precio_tipo_inmueble(data):
     '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
     try: 
-        df_precio_compra_tipo_inmueble = data.groupby('tipo_inmueble', as_index=False, sort=True).mean(numeric_only = True)
-        ax = sns.catplot(x= 'tipo_inmueble', y = 'precio_venta_por_m2', data = df_precio_compra_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
-        ax.set_xticklabels(df_precio_compra_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
+        df_precio_venta_tipo_inmueble = data.groupby('tipo_inmueble', as_index=False, sort=True).mean(numeric_only = True)
+        ax = sns.catplot(x= 'tipo_inmueble', y = 'precio_venta_por_m2', data = df_precio_venta_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
+        ax.set_xticklabels(df_precio_venta_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
         plt.title('Relación entre tipo de inmueble y Precio de venta por metros cuadrados')
     except Exception as a:
         print(f"No pude analizar la variable por {a}")
