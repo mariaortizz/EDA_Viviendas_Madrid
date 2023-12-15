@@ -49,3 +49,34 @@ def cardinalidad(df):
     df_cardinalidad = pd.concat([df_cardin,df_tipo_variable], axis = 1)
 
     return df_cardinalidad
+
+def graficos_variables_cuant(data):
+    ''''Funcuion para graficar las variables cuantitativas'''
+    try:
+        for columna in data.columns:
+            print('--'*30)
+            print(f"VARIABLE: {columna}\n")
+
+            media = data[columna].mean()
+            mediana = data[columna].median()
+
+            plt.figure(figsize=(20,4))
+            sns.boxplot(data[columna], orient='h', palette='husl')
+            plt.axvline(media, color = media_color, linestyle = 'dashed', linewidth = 1)
+            plt.axvline(mediana, color = mediana_color, linestyle = 'dashed', linewidth = 1)
+
+            plt.show()
+
+            sns.displot(data[columna], rug = True, palette='husl' , bins = 30)
+            plt.axvline(media, color = media_color, linestyle = 'dashed', linewidth = 1, label = f'Media: {media:.0f}')
+            plt.axvline(mediana, color = mediana_color, linestyle = 'dashed', linewidth = 1, label = f'Mediana: {mediana:.0f}')
+
+            plt.title(f'Distribución de {columna}')
+            plt.legend()
+
+            plt.show()
+
+            print(data[columna].describe().round())
+            print('--'*30)
+    except Exception as a:
+        print(f"No puedo analizar la variable por este error {a}")
