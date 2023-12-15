@@ -4,7 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-from scipy.stats import kurtosis, skew, probplot, shapiro
+from scipy.stats import kurtosis, skew, probplot, shapiro, spearmanr, kruskal
 from geopy.geocoders import Nominatim
 import time
 import pandas as pd
@@ -380,28 +380,28 @@ def pair_plot(data):
         df_cuant_pair_plot = data.select_dtypes(include = 'number').drop(columns=['annio_construccion', 'latitud', 'longitud'], axis=1)
         sns.pairplot(df_cuant_pair_plot, kind='reg', palette='husl', markers='.');
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
 
 def precio_cee(data):
     '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
     try: 
         df_precio_venta_cee = data.groupby('cee', as_index=False).mean(numeric_only = True)
-        ax = sns.catplot(x = 'cee', y='precio_venta_por_m2', hue = 'cee', kind= 'bar',
+        ax = sns.catplot(x = 'precio_venta_por_m2', y='cee', hue = 'cee', kind= 'bar',
         data=df_precio_venta_cee.sort_values(by='cee'), palette='husl');
-        ax.set_xticklabels(df_precio_venta_cee['cee'].sort_values().unique(), rotation=90)
+        # ax.set_xticklabels(df_precio_venta_cee['cee'].sort_values().unique(), rotation=90)
         plt.title('Relación entre CEE y Precio de venta por metros cuadrados')
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
 
 def precio_tipo_inmueble(data):
-    '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
+    '''Función para ver graficamente la relación que existe entre el tipo de inmueble y el precio de venta por metro cuadrado'''
     try: 
         df_precio_venta_tipo_inmueble = data.groupby('tipo_inmueble', as_index=False, sort=True).mean(numeric_only = True)
-        ax = sns.catplot(x= 'tipo_inmueble', y = 'precio_venta_por_m2', data = df_precio_venta_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
-        ax.set_xticklabels(df_precio_venta_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
+        ax = sns.catplot(x= 'precio_venta_por_m2', y = 'tipo_inmueble', data = df_precio_venta_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
+        # ax.set_xticklabels(df_precio_venta_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
         plt.title('Relación entre tipo de inmueble y Precio de venta por metros cuadrados')
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
 
 def tranformacion_numerica(data):
     '''Función para convertir los booleanos que tenemos en el dataframe en 1 y 0 para poder analizar otras cosas'''
@@ -413,11 +413,166 @@ def tranformacion_numerica(data):
         print(f"No pude analizar la variable por {a}")
     return df_todo_n
 
+def grafico_precio_var1_var2(data, var1, var2):
+    '''Función para evaluar como aumenta el precio de venta por m2 respecto de las habitaciones y otra variable cualitativa a elección
+    Input: 
+    data = dataframe
+    variable = columa dataframe
+    '''
+    try:
+        sns.scatterplot(x= var1, y = 'precio_venta_por_m2', data = data, hue = var2, palette='husl')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_precio_zona_yvariable(data, variable):
+    '''Función para evaluar como aumenta el precio de venta por m2 por zona y otra variable a elegir
+    Input: 
+    data = dataframe
+    variable = columa dataframe
+    '''
+    try:
+        ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = variable, kind= 'bar', palette='husl',
+            data=data, errorbar = 'sd', err_kws={'linewidth': 1});
+        # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
+        plt.title(f'Relación entre {variable} y precio de venta por m2 por Zonas')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_precio_zona(data):
+    '''Función para evaluar como aumenta el precio de venta por m2 por zona y otra variable a elegir
+    Input: 
+    data = dataframe
+    variable = columa dataframe
+    '''
+    try:
+        ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = 'zona', kind= 'bar', palette='husl',
+            data=data, errorbar = 'sd', err_kws={'linewidth': 1});
+        # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
+        plt.title(f'Relación entre la zona y precio de venta por m2')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_precio_var1(data, variable):
+    '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
+    try: 
+        df_precio_venta_var = data.groupby(variable, as_index=False).mean(numeric_only = True)
+        ax = sns.catplot(y = 'precio_venta_por_m2', x=variable, hue = variable, kind= 'bar',
+        data=df_precio_venta_var, palette= 'husl')
+        # ax.set_xticklabels(df_precio_venta_cee[variable].sort_values().unique(), rotation=90)
+        plt.title(f'Relación entre {variable} y Precio de venta por metros cuadrados')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
 def grafico_mapa(data):
     '''Función para graficar en un mapa las variables de precio venta por m2, por zona y según el tamaño que tienen'''
     try:
         fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'metros_cuadrados',
                         color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
-                        zoom = 3, mapbox_style = 'open-street-map')  
+                        zoom = 3, mapbox_style = 'open-street-map')
+        fig.show()  
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_heatmap(data):
+    '''Función para graficar en un mapa de calor mostrando las correlaciones entre las variables'''
+    try:
+        df_cuant = data.select_dtypes(include = 'number')
+        plt.figure(figsize=(10,10))
+        sns.heatmap(df_cuant.corr(numeric_only=True), robust=True, 
+                    square = True, linewidths = .3)      
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_var1_var2(data, var1, var2):
+    '''Función para graficar la relacion de dos variables'''
+    try:
+        plt.figure(figsize=(10, 6))
+        sns.regplot(x=var1, y=var2, data=data, marker='o')
+
+        plt.title(f'Relación entre {var1} y {var2}')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def prueba_corr_separmanr(df, var1, var2):
+    try:
+        correlation_coefficient, p_value = spearmanr(df[var1], df[var2])
+        print(f"Coeficiente de correlación de Spearman: {correlation_coefficient}")
+        print(f"Valor p: {p_value.round()}")
+
+        alpha = 0.05
+        if p_value < alpha:
+            print("Hay evidencia para rechazar la hipótesis nula; existe una correlación significativa.")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula; no se puede afirmar una correlación significativa.")
+    except Exception as a:
+        print(f"No pude evaluar la correlación por {a}")
+
+def prueba_krus_cee(data):
+    try:
+        # Prueba de Kruskal-Wallis para más de dos muestras independientes
+        stat_kw, p_value_kw = kruskal(data['precio_venta_por_m2'][data['cee'] == 'A'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'B'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'C'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'D'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'E'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'F'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'G'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'inmueble exento'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'no indicado'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'en trámite']
+                                    )
+        alpha = 0.05 
+        # Hipótesis nula (H0): No hay diferencia significativa en la de precios por m2 entre las letras de los certificados.
+        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en la de precios por m2 entre las letras de los certificados.
+
+        print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
+
+        if p_value_kw < alpha:
+            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en la de precios por m2 entre las letras de los certificados")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en la de precios por m2 entre las letras de los certificados.")
+    except Exception as a:
+        print(f"No pude hacer la prueba {a}")
+
+def prueba_krus_zonas(data):
+    try:
+    # Prueba de Kruskal-Wallis para más de dos muestras independientes
+        stat_kw, p_value_kw = kruskal(data['precio_venta_por_m2'][data['zona'] == 'sur'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'norte'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'este'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'oeste'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'centro']
+                                    )
+        alpha = 0.05 
+        # Hipótesis nula (H0): No hay diferencia significativa en en el precio por m2 entre las zonas.
+        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en en el precio por m2 entre las zonas.
+
+        print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
+
+        if p_value_kw < alpha:
+            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en en el precio por m2 entre las zonas")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en en el precio por m2 entre las zonas.")
+    except Exception as a:
+        print(f"No pude hacer la prueba {a}")
+
+def prueba_krus_tipo_inmueble(data):
+    try:
+    # Prueba de Kruskal-Wallis para más de dos muestras independientes
+        stat_kw, p_value_kw = kruskal(data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 1: Pisos'],
+                                    data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 5: Áticos'],
+                                    data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 2: Casa o chalet'],
+                                    data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 4: Dúplex']
+                                    )
+        alpha = 0.05 
+        # Hipótesis nula (H0): No hay diferencia significativa en en el precio por m2 entre los tipos de inmuebles.
+        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en en el precio por m2 entre los tipos de inmuebles.
+
+        print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
+
+        if p_value_kw < alpha:
+            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en en el precio por m2 entre los tipos de inmuebles")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en en el precio por m2 entre los tipos de inmuebles.")
+    except Exception as a:
+        print(f"No pude hacer la prueba {a}")
