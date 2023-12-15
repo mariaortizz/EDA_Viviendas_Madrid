@@ -101,3 +101,147 @@ def graficos_variables_cualit(data):
             print('--'*50)
     except Exception as a:
         print(f"No puedo analizar la variable por este error {a}")
+
+def rellenar_columnas_F(data):
+    ''' Función que rellena las columnas que tienen valor true y nan'''
+    try:
+        data['zonas_verdes'].replace(np.nan, False,inplace=True)
+        data['balcon'].replace(np.nan, False,inplace=True)
+        data['armarios_empotrados'].replace(np.nan, False,inplace=True)
+        data['jardin'].replace(np.nan, False,inplace=True)
+        data['pileta'].replace(np.nan, False,inplace=True)
+        data['trastero'].replace(np.nan, False,inplace=True)
+        data['terraza'].replace(np.nan, False,inplace=True)
+        data['accesible'].replace(np.nan, False,inplace=True)
+    except Exception as a:
+        print(f"No pude rellenar las columnas por {a}")
+    return data
+
+def rellenar_annios_nulos_necesitan_reforma(data):
+    '''Función para rellenar los annios que vienen nulos'''
+    try:
+        #diccionario para ver si tenemos todos las ubicaciones o no
+        dicc_annios_antiguos = data[(data['necesita_reforma'] == True) & (data['annio_construccion'].notna())].groupby('ubicacion')[['annio_construccion']].mean(numeric_only = True).astype(int).reset_index().to_dict('records')
+        
+        #agrega las ubicaciones que no existen, asignando la media de los inmuebles que necesitan reforma
+        dicc_annios_antiguos = dicc_annios_antiguos + [{'ubicacion': 'Horcajo, Madrid', 'annio_construccion': 1957}, 
+                   {'ubicacion': 'Valdebebas - Valdefuentes, Madrid', 'annio_construccion': 1957},
+                   {'ubicacion': 'Virgen del Cortijo - Manoteras, Madrid', 'annio_construccion': 1957}]
+        
+        data_annios_antiguos = pd.DataFrame(dicc_annios_antiguos)
+        data_unido = pd.merge(data,data_annios_antiguos, on='ubicacion', how = 'left')
+
+        #asigna el valor de el annio en base a la la ubicacion
+        data_unido['annio_construccion'] = data_unido.apply(lambda x: x.annio_construccion_y if ((x.necesita_reforma == True) & (pd.isna(x.annio_construccion_x))) else x.annio_construccion_x, axis = 1)
+
+        data = data_unido.drop(columns=['annio_construccion_y', 'annio_construccion_x'], axis = 1)
+    
+    except Exception as a:
+        print(f"No pude transformar el df por {a}")
+
+    return data
+
+def rellenar_annios_nulos_no_necesitan_reforma(data):
+    '''Función para rellenar los annios que vienen nulos'''
+    try:
+        #diccionario para ver si tenemos todos las ubicaciones o no
+        dicc_annios_nuevo = data[(data['necesita_reforma'] == False) & (data['annio_construccion'].notna())].groupby('ubicacion')[['annio_construccion']].mean(numeric_only = True).astype(int).reset_index().to_dict('records')
+        
+        #agrega las ubicaciones que no existen, asignando la media de los inmuebles que no necesitan reforma
+        dicc_annios_nuevo = dicc_annios_nuevo + [{'ubicacion': 'Cuatro Vientos, Madrid', 'annio_construccion': 1973}]
+        
+        data_annios_nuevo = pd.DataFrame(dicc_annios_nuevo)
+        data_unido_nuevo = pd.merge(data,data_annios_nuevo, on='ubicacion', how='left')
+
+        #asigna el valor de el annio en base a la la ubicacion
+        data_unido_nuevo['annio_construccion'] = data_unido_nuevo.apply(lambda x: x.annio_construccion_y if ((x.necesita_reforma == False) & (pd.isna(x.annio_construccion_x))) else x.annio_construccion_x, axis = 1)
+
+        data = data_unido_nuevo.drop(columns=['annio_construccion_x', 'annio_construccion_y'], axis = 1)
+    
+    except Exception as a:
+        print(f"No pude transformar el df por {a}")
+
+    return data
+
+def rellenar_annio_outlier(data):
+    '''Funcion para rellenar un año de construccion incorrecto'''
+    media_año_barrio_s = data[(data['ubicacion'] == 'Barrio de Salamanca, Madrid') & (data['annio_construccion'].notna())].groupby('ubicacion')['annio_construccion'].mean(numeric_only = True).astype(int)
+    data['annio_construccion'].replace(8170.0, 1979, inplace= True)
+    return data
+
+def rellenar_pisos_nulos(data):
+    '''Funcion para rellenar los valores nulos de los pisos, con la moda segun la ubicacion'''
+    try:
+        #df el piso que más se repite, respetando las alturas por ubicacion segun normativa
+        df_piso_más_comun = data[data['piso'].notna()].groupby(['ubicacion', 'piso'], as_index=False).count()[['ubicacion', 'piso']].groupby('ubicacion', as_index=False).max()
+
+        df_unido_pisos = pd.merge(data,df_piso_más_comun, on='ubicacion', how= 'inner')
+
+        df_unido_pisos['piso'] = df_unido_pisos.apply(lambda x: x.piso_y if pd.isna(x.piso_x) else x.piso_x, axis = 1)
+
+        data = df_unido_pisos.drop(columns=['piso_x', 'piso_y'], axis = 1)
+    except Exception as a:
+        print(f"No pude transformar el df por {a}")
+    return data
+
+def rellenar_bajos_nulos(data):
+    '''Funcion que rellena los valores nulos en la columna bajo en base al piso en el que se encuentra'''
+    try:
+        bajos = ('Semi-sótano', 'Entreplanta interior', 'Entreplanta', 'Semi-sótano exterior', 'Semi-sótano interior', 'Sótano interior', 'Sótano', 'Sótano exterior')
+
+        data['bajo'] = data['piso'].apply(lambda x: True if x in bajos else False)
+
+    except Exception as a:
+        print(f"No puse tranformar el df por {a}")
+    
+    return data
+
+def sacar_metros_cuadrados_nuevos(data):
+    ''''Funcion para rellenar los valores nulos de los metros cuadrados en base a el precio por metro cuadrado'''
+    try:
+        data.drop(columns=['metros_cuadrados'], axis= 1, inplace=True)
+        data['metros_cuadrados'] = (data['precio_compra'] / data['precio_compra_por_m2']).round()
+    except Exception as a:
+        print(f"No pude tranformar el dataframe")
+    return data
+
+def rellenar_exterior(data):
+    '''Funcion que rellena los valores nulos en la columna exterior en base a el piso en el que se encuentra'''
+    try:
+        exteriores = ('Entreplanta exterior', 'Semi-sótano exterior', 'Sótano exterior')
+
+        data['exterior'] = data['piso'].apply(lambda x: True if x in exteriores else False)
+
+    except Exception as a:
+        print(f"No puse tranformar el df por {a}")
+    
+    return data
+
+def rellenar_tipo_inmueble(data):
+    '''Funcion que rellena los valores nulos en la columna tipo_inmueble, los unico no completos son los estudios'''
+    try:
+        data['tipo_inmueble'].fillna(value ='HouseType 1: Pisos', inplace=True)
+
+    except Exception as a:
+        print(f"No puse tranformar el df por {a}")
+    
+    return data
+
+def rellenar_bannos_nulos(data):
+    '''Funcion para rellenar los valores nulos de los bannos, con la media segun los metros cuadrados'''
+    try:
+        dicc_bannos = data[data['bannos'].notna()].groupby(['metros_cuadrados'], as_index=False)[['bannos']].mean().round().to_dict('records')
+        dicc_bannos.append({'metros_cuadrados': 661, 'bannos': 5})
+
+        df_banno_mas_comun = pd.DataFrame(dicc_bannos)
+
+        df_unido_bannos = pd.merge(data,df_banno_mas_comun, on='metros_cuadrados', how= 'inner')
+
+        df_unido_bannos['bannos'] = df_unido_bannos.apply(lambda x: x.bannos_y if pd.isna(x.bannos_x) else x.bannos_x, axis = 1)
+
+        data = df_unido_bannos.drop(columns=['bannos_x', 'bannos_y'], axis = 1)
+    except Exception as a:
+        print(f"No pude transformar el df por {a}")
+    return data
+
+
