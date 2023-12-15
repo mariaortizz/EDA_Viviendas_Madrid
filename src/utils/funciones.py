@@ -507,25 +507,28 @@ def prueba_corr_pearson(df, var1, var2):
         print(f"No pude evaluar la correlación por {a}")
 
 def prueba_krus_cee(data):
-    # Prueba de Kruskal-Wallis para más de dos muestras independientes
-    stat_kw, p_value_kw = kruskal(data['precio_compra_por_m2'][data['cee'] == 'A'],
-                                data['precio_compra_por_m2'][data['cee'] == 'B'],
-                                data['precio_compra_por_m2'][data['cee'] == 'C'],
-                                data['precio_compra_por_m2'][data['cee'] == 'D'],
-                                data['precio_compra_por_m2'][data['cee'] == 'E'],
-                                data['precio_compra_por_m2'][data['cee'] == 'F'],
-                                data['precio_compra_por_m2'][data['cee'] == 'G'],
-                                data['precio_compra_por_m2'][data['cee'] == 'inmueble exento'],
-                                data['precio_compra_por_m2'][data['cee'] == 'no indicado'],
-                                data['precio_compra_por_m2'][data['cee'] == 'en trámite']
-                                )
-    alpha = 0.05 
-    # Hipótesis nula (H0): No hay diferencia significativa en la calificación entre las letras de los certificados.
-    # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en la calificación entre las letras de los certificados.
+    try:
+        # Prueba de Kruskal-Wallis para más de dos muestras independientes
+        stat_kw, p_value_kw = kruskal(data['precio_venta_por_m2'][data['cee'] == 'A'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'B'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'C'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'D'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'E'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'F'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'G'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'inmueble exento'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'no indicado'],
+                                    data['precio_venta_por_m2'][data['cee'] == 'en trámite']
+                                    )
+        alpha = 0.05 
+        # Hipótesis nula (H0): No hay diferencia significativa en la calificación entre las letras de los certificados.
+        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en la calificación entre las letras de los certificados.
 
-    print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
+        print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
 
-    if p_value_kw < alpha:
-        print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en la calificación entre las letras de los certificados")
-    else:
-        print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en la calificación entre las letras de los certificados.")
+        if p_value_kw < alpha:
+            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en la calificación entre las letras de los certificados")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en la calificación entre las letras de los certificados.")
+    except Exception as a:
+        print(f"No pude hacer la prueba {a}")
