@@ -8,7 +8,7 @@ from matplotlib.gridspec import GridSpec
 pd.set_option('display.max_columns', None)
 
 
-def nombre_columnas(self,df):
+def nombre_columnas(df):
     '''Función para tratar el nombre de las columnas y eliminar las vacias'''
     try:
         df.drop(columns=['latitude', 'longitude', 'portal', 'door', 'rent_price_by_area', 'are_pets_allowed', 'is_furnished',
@@ -29,7 +29,7 @@ def nombre_columnas(self,df):
         print(f"No pude tranformar las columnas por {a}")
     return df
 
-def cardinalidad(self,df):
+def cardinalidad(df):
     '''Funcion para saber la cardinalidad de las varibales que tenemos en el data frame'''
     df_cardin = pd.DataFrame([{
                 'variable' : i,
