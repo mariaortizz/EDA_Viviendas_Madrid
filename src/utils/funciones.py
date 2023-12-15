@@ -492,11 +492,11 @@ def grafico_var1_var2(data, var1, var2):
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
-def prueba_corr_pearson(df, var1, var2):
+def prueba_corr_separmanr(df, var1, var2):
     try:
         correlation_coefficient, p_value = spearmanr(df[var1], df[var2])
         print(f"Coeficiente de correlación de Spearman: {correlation_coefficient}")
-        print(f"Valor p: {p_value}")
+        print(f"Valor p: {p_value.round()}")
 
         alpha = 0.05
         if p_value < alpha:
