@@ -521,14 +521,57 @@ def prueba_krus_cee(data):
                                     data['precio_venta_por_m2'][data['cee'] == 'en trámite']
                                     )
         alpha = 0.05 
-        # Hipótesis nula (H0): No hay diferencia significativa en la calificación entre las letras de los certificados.
-        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en la calificación entre las letras de los certificados.
+        # Hipótesis nula (H0): No hay diferencia significativa en la de precios por m2 entre las letras de los certificados.
+        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en la de precios por m2 entre las letras de los certificados.
 
         print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
 
         if p_value_kw < alpha:
-            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en la calificación entre las letras de los certificados")
+            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en la de precios por m2 entre las letras de los certificados")
         else:
-            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en la calificación entre las letras de los certificados.")
+            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en la de precios por m2 entre las letras de los certificados.")
+    except Exception as a:
+        print(f"No pude hacer la prueba {a}")
+
+def prueba_krus_zonas(data):
+    try:
+    # Prueba de Kruskal-Wallis para más de dos muestras independientes
+        stat_kw, p_value_kw = kruskal(data['precio_venta_por_m2'][data['zona'] == 'sur'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'norte'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'este'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'oeste'],
+                                    data['precio_venta_por_m2'][data['zona'] == 'centro']
+                                    )
+        alpha = 0.05 
+        # Hipótesis nula (H0): No hay diferencia significativa en en el precio por m2 entre las zonas.
+        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en en el precio por m2 entre las zonas.
+
+        print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
+
+        if p_value_kw < alpha:
+            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en en el precio por m2 entre las zonas")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en en el precio por m2 entre las zonas.")
+    except Exception as a:
+        print(f"No pude hacer la prueba {a}")
+
+def prueba_krus_tipo_inmueble(data):
+    try:
+    # Prueba de Kruskal-Wallis para más de dos muestras independientes
+        stat_kw, p_value_kw = kruskal(data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 1: Pisos'],
+                                    data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 5: Áticos'],
+                                    data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 2: Casa o chalet'],
+                                    data['precio_venta_por_m2'][data['tipo_inmueble'] == 'HouseType 4: Dúplex']
+                                    )
+        alpha = 0.05 
+        # Hipótesis nula (H0): No hay diferencia significativa en en el precio por m2 entre los tipos de inmuebles.
+        # Hipótesis alternativa (Ha): Existe al menos una diferencia significativa en en el precio por m2 entre los tipos de inmuebles.
+
+        print(f"\nPrueba de Kruskal-Wallis para más de dos muestras independientes: stat = {stat_kw}, p_value = {p_value_kw}")
+
+        if p_value_kw < alpha:
+            print("Rechazamos la hipótesis nula. Hay evidencia de al menos una diferencia significativa en en el precio por m2 entre los tipos de inmuebles")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula. No hay diferencia significativa en en el precio por m2 entre los tipos de inmuebles.")
     except Exception as a:
         print(f"No pude hacer la prueba {a}")
