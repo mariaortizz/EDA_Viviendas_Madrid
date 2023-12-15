@@ -388,7 +388,7 @@ def precio_cee(data):
         df_precio_venta_cee = data.groupby('cee', as_index=False).mean(numeric_only = True)
         ax = sns.catplot(x = 'precio_venta_por_m2', y='cee', hue = 'cee', kind= 'bar',
         data=df_precio_venta_cee.sort_values(by='cee'), palette='husl');
-        ax.set_xticklabels(df_precio_venta_cee['cee'].sort_values().unique(), rotation=90)
+        # ax.set_xticklabels(df_precio_venta_cee['cee'].sort_values().unique(), rotation=90)
         plt.title('Relación entre CEE y Precio de venta por metros cuadrados')
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
@@ -398,7 +398,7 @@ def precio_tipo_inmueble(data):
     try: 
         df_precio_venta_tipo_inmueble = data.groupby('tipo_inmueble', as_index=False, sort=True).mean(numeric_only = True)
         ax = sns.catplot(x= 'precio_venta_por_m2', y = 'tipo_inmueble', data = df_precio_venta_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
-        ax.set_xticklabels(df_precio_venta_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
+        # ax.set_xticklabels(df_precio_venta_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
         plt.title('Relación entre tipo de inmueble y Precio de venta por metros cuadrados')
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
