@@ -413,14 +413,14 @@ def tranformacion_numerica(data):
         print(f"No pude analizar la variable por {a}")
     return df_todo_n
 
-def grafico_precio_habitaciones_yvariable(data, variable):
+def grafico_precio_var1_var2(data, var1, var2):
     '''Función para evaluar como aumenta el precio de venta por m2 respecto de las habitaciones y otra variable cualitativa a elección
     Input: 
     data = dataframe
     variable = columa dataframe
     '''
     try:
-        sns.scatterplot(x= 'habitaciones', y = 'precio_venta_por_m2', data = data, hue = variable, palette='husl')
+        sns.scatterplot(x= var1, y = 'precio_venta_por_m2', data = data, hue = var2, palette='husl')
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
@@ -432,7 +432,7 @@ def grafico_precio_zona_yvariable(data, variable):
     '''
     try:
         ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = variable, kind= 'bar', palette='husl',
-            data=data, errorbar = 'sd', errwidth = 1);
+            data=data, errorbar = 'sd', err_kws={'linewidth': 1});
         # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
         plt.title(f'Relación entre {variable} y precio de venta por m2 por Zonas')
     except Exception as a:
@@ -446,7 +446,7 @@ def grafico_precio_zona(data):
     '''
     try:
         ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = 'zona', kind= 'bar', palette='husl',
-            data=data, errorbar = 'sd', errwidth = 1);
+            data=data, errorbar = 'sd', err_kws={'linewidth': 1});
         # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
         plt.title(f'Relación entre la zona y precio de venta por m2')
     except Exception as a:
