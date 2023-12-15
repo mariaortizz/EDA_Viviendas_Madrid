@@ -207,7 +207,7 @@ def sacar_metros_cuadrados_nuevos(data):
         data.drop(columns=['metros_cuadrados'], axis= 1, inplace=True)
         data['metros_cuadrados'] = (data['precio_venta'] / data['precio_venta_por_m2']).round()
     except Exception as a:
-        print(f"No pude tranformar el dataframe")
+        print(f"No pude tranformar el dataframe en la función 'sacar_metros_cuadrados_nuevos'")
     return data
 
 def rellenar_exterior(data):
