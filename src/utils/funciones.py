@@ -431,7 +431,7 @@ def grafico_precio_zona_yvariable(data, variable):
     variable = columa dataframe
     '''
     try:
-        ax = sns.catplot(x = 'zona', y='precio_compra_por_m2', hue = variable, kind= 'bar', palette='husl',
+        ax = sns.catplot(x = 'zona', y='precio_venta_por_m2', hue = variable, kind= 'bar', palette='husl',
             data=data, errorbar = 'sd', errwidth = 1);
         ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
         plt.title(f'Relación entre {variable} y precio de venta por m2 por Zonas')
