@@ -18,7 +18,7 @@ def nombre_columnas(df):
                     'has_central_heating', 'has_individual_heating', 'has_lift', 'is_orientation_east', 'is_orientation_north', 'is_orientation_south', 'is_orientation_west'
                     ], axis=1, inplace = True)
         
-        df.columns = ['annio_construccion', 'precio_compra', 'precio_compra_por_m2', 'cee',
+        df.columns = ['annio_construccion', 'precio_venta', 'precio_venta_por_m2', 'cee',
     'piso', 'balcon', 'armarios_empotrados', 'jardin', 'zonas_verdes', 
     'estacionamiento', 'pileta',
     'trastero', 'terraza', 'tipo_inmueble',
