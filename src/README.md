@@ -52,7 +52,7 @@ Después de analizar las variables que más afectan al precio por metro cuadrado
 
 > Mapa que muestra el precio por metro cuadrado y el tamaño de las viviendas
 
-![Alt text](image.png)
+![Alt text](./data/image.png)
 
 
 
