@@ -468,7 +468,8 @@ def grafico_mapa(data):
     try:
         fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'metros_cuadrados',
                         color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
-                        zoom = 3, mapbox_style = 'open-street-map')  
+                        zoom = 3, mapbox_style = 'open-street-map')
+        fig.show()  
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
