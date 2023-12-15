@@ -1,8 +1,8 @@
 # EDA_Viviendas_Madrid
 
+![imagen](./data/imagen.jpg)
 
-
-Maria del Rosario Ortiz
+#### Maria del Rosario Ortiz
 15/12/23
 
 Este es un trabajo de investigación de datos sobre viviendas de Madrid. El objetivo es analizar como se ve afectado el precio por metros cuadrados (€/m2) de una vivienda en Madrid, según distintas variables o características propias de las viviendas como:
@@ -46,6 +46,13 @@ Los datos utilizados se obtuvieros de [Link Dataset](https://www.kaggle.com/data
 
 Mediante métodos gráficos y estadisticos se analiza la relación entre la variable principal (precio_venta_por_m2) contra las demás variables del dataset
 
+#### Resultados hacia futuro:
+Después de analizar las variables que más afectan al precio por metro cuadrado de una vivienda se puede predecir el mismo para realizar una venta o nos puede dar una visión previa a la hora de realizar la tasación de un inmueble.
+
+
+> Mapa que muestra el precio por metro cuadrado y el tamaño de las viviendas
+
+![Alt text](image.png)
 
 
 
