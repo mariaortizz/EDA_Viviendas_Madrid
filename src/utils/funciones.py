@@ -4,21 +4,26 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+from scipy.stats import kurtosis, skew, probplot, shapiro
+from geopy.geocoders import Nominatim
+import time
+import pandas as pd
+import plotly.express as px
 
 pd.set_option('display.max_columns', None)
 
 
-def nombre_columnas(df):
+def nombre_columnas(data):
     '''Función para tratar el nombre de las columnas y eliminar las vacias'''
     try:
-        df.drop(columns=['latitude', 'longitude', 'portal', 'door', 'rent_price_by_area', 'are_pets_allowed', 'is_furnished',
+        data.drop(columns=['latitude', 'longitude', 'portal', 'door', 'rent_price_by_area', 'are_pets_allowed', 'is_furnished',
                     'is_kitchen_equipped', 'has_private_parking', 'has_public_parking', 'sq_mt_useful', 'n_floors', 'has_ac', 'title',
                     'sq_mt_allotment', 'raw_address', 'is_exact_address_hidden', 'street_name', 'street_number', 'is_buy_price_known',
                     'is_parking_included_in_price', 'is_rent_price_known', 'operation', 'is_new_development', 'parking_price', 'rent_price', 'id', 'neighborhood_id',
                     'has_central_heating', 'has_individual_heating', 'has_lift', 'is_orientation_east', 'is_orientation_north', 'is_orientation_south', 'is_orientation_west'
                     ], axis=1, inplace = True)
         
-        df.columns = ['annio_construccion', 'precio_venta', 'precio_venta_por_m2', 'cee',
+        data.columns = ['annio_construccion', 'precio_venta', 'precio_venta_por_m2', 'cee',
     'piso', 'balcon', 'armarios_empotrados', 'jardin', 'zonas_verdes', 
     'estacionamiento', 'pileta',
     'trastero', 'terraza', 'tipo_inmueble',
@@ -27,18 +32,18 @@ def nombre_columnas(df):
 
     except Exception as a:
         print(f"No pude tranformar las columnas por {a}")
-    return df
+    return data
 
-def cardinalidad(df):
+def cardinalidad(data):
     '''Funcion para saber la cardinalidad de las varibales que tenemos en el data frame'''
     df_cardin = pd.DataFrame([{
                 'variable' : i,
-                'tipo_dato' : df[i].dtypes,
-                'cantidad_de_nulos' : df[i].isna().sum(),
-                'valores_unicos' : df[i].unique(),
-                'cardinalidad' : df[i].nunique(),
-                'porcentaje_cardinalidad' : (df[i].nunique()/df.shape[0])*100
-            } for i in df])
+                'tipo_dato' : data[i].dtypes,
+                'cantidad_de_nulos' : data[i].isna().sum(),
+                'valores_unicos' : data[i].unique(),
+                'cardinalidad' : data[i].nunique(),
+                'porcentaje_cardinalidad' : (data[i].nunique()/data.shape[0])*100
+            } for i in data])
     
     df_tipo_variable = pd.DataFrame({'tipo_variable' : ['discreta', 'continua', 'continua', 'ordinal',
             'ordinal', 'nominal', 'nominal', 'nominal', 'nominal',
@@ -244,4 +249,175 @@ def rellenar_bannos_nulos(data):
         print(f"No pude transformar el df por {a}")
     return data
 
+def determinacion_zonas(data):
+    '''Funcion para subdivir las localizaciones por zonas'''
+    try:
+        sur = ['Usera, Madrid', 'Puente de Vallecas, Madrid', 'Carabanchel, Madrid', 'Villaverde, Madrid', 'Puerta Bonita, Madrid', 'Vista Alegre, Madrid', 'San Fermín, Madrid', 'Pradolongo, Madrid', '12 de Octubre-Orcasur, Madrid', 'Almendrales, Madrid', 'Moscardó, Madrid', 'Zofío, Madrid', 'Los Ángeles, Madrid', 'San Cristóbal, Madrid']
+        este = ['Vicálvaro, Madrid', 'Casco Histórico de Vallecas, Madrid', 'Ensanche de Vallecas - La Gavia, Madrid', 'Santa Eugenia, Madrid', 'Orcasitas, Madrid', 'San Diego, Madrid', 'Valdebernardo - Valderribas, Madrid', 'Valdezarza, Madrid', 'Barajas, Madrid', 'Arapiles, Madrid', 'San Juan Bautista, Madrid', 'Prosperidad, Madrid', 'Ciudad Lineal, Madrid', 'Costillares, Madrid', 'Pueblo Nuevo, Madrid', 'Quintana, Madrid']
+        centro = ['Retiro, Madrid', 'Arganzuela, Madrid', 'Chamberí, Madrid', 'Centro, Madrid', 'Malasaña-Universidad, Madrid', 'Palacio, Madrid', 'Sol, Madrid', 'Chueca-Justicia, Madrid', 'Huertas-Cortes, Madrid', 'La Paz, Madrid', 'Recoletos, Madrid', 'Jerónimos, Madrid', 'Atalaya, Madrid', 'Niño Jesús, Madrid', 'Fuentelarreina, Madrid', 'Alameda de Osuna, Madrid', 'Media Legua, Madrid']
+        oeste = ['Moncloa, Madrid', 'Chamartín, Madrid', 'Tetuán, Madrid', 'Argüelles, Madrid', 'Valdemarín, Madrid', 'Ciudad Universitaria, Madrid', 'Nuevos Ministerios-Ríos Rosas, Madrid', 'Aravaca, Madrid', 'Vallehermoso, Madrid', 'Cuatro Caminos, Madrid', 'Ventilla-Almenara, Madrid', 'Sanchinarro, Madrid', 'El Viso, Madrid', 'Ciudad Jardín, Madrid', 'Chopera, Madrid', 'Valdemarín, Madrid', 'Virgen del Cortijo - Manoteras, Madrid']
+        norte = ['Fuencarral, Madrid', 'Peñagrande, Madrid', 'Pilar, Madrid', 'Pinar del Rey, Madrid', 'Canillas, Madrid', 'Tres Olivos - Valverde, Madrid', 'Conde Orgaz-Piovera, Madrid', 'Hortaleza, Madrid', 'Apóstol Santiago, Madrid', 'Nuevos Ministerios-Ríos Rosas, Madrid', 'Arapiles, Madrid', 'Bernabéu-Hispanoamérica, Madrid', 'Prosperidad, Madrid', 'Castilla, Madrid', 'Fuente del Berro, Madrid', 'Media Legua, Madrid']
 
+        funcion_lambda = lambda x: 'sur' if x in sur else ('este' if x in este else ('centro' if x in centro else ('oeste' if x in oeste else 'norte')))
+        data['zona'] = data['ubicacion'].apply(funcion_lambda)
+    except Exception as a:
+        print(f"No pude transformar el df por {a}")
+    return data
+
+def obtener_coordenadas(data):
+    '''Funcion para asignar coordenadas a las ubicaciones que tenemos en el dataframe'''
+    try: 
+        
+        def obtener_coordenadas(direccion):
+            try:
+                geolocalizador = Nominatim(user_agent="maria")
+                ubicacion = geolocalizador.geocode(direccion)
+
+                if ubicacion:
+                    latitud = ubicacion.latitude
+                    longitud = ubicacion.longitude
+
+                    return latitud, longitud
+                else:
+                    print(f"No se encontraron coordenadas para la dirección proporcionada {direccion}.")
+                    time.sleep(1)
+                    latitud = float(input('Lat: '))
+                    longitud = float(input('Long: '))
+                    return latitud, longitud
+            except:
+                pass
+
+        dicc = []
+        for i in data['ubicacion'].unique():
+            coodenadas = obtener_coordenadas(i)
+            dicc.append({'ubicacion' : i, 
+                        'latitud' : coodenadas[0],
+                        'longitud' : coodenadas[1]})
+        df_coordenadas = pd.DataFrame(dicc)
+    except Exception as a:
+        print(f"No pude generar el df por {a}")
+    return df_coordenadas
+
+
+def grafico_variable_ppal(data):
+    ''' 
+
+    Funcion para graficar la variable principal a analizar
+    input : df
+    output: grafico
+
+    '''
+    try:
+        media_color = 'r'
+        mediana_color = 'b'
+        media = data['precio_venta_por_m2'].mean()
+        median = data['precio_venta_por_m2'].median()
+        variance = data['precio_venta_por_m2'].var()
+        desv_std = data['precio_venta_por_m2'].std()  
+        kurtosis_valor = kurtosis(data['precio_venta_por_m2'])
+        simetria_valor = skew(data['precio_venta_por_m2'])
+
+        sns.kdeplot(data=data, x='precio_venta_por_m2',fill=True,palette='hls')
+        # Agregar líneas verticales para las estadísticas
+        plt.axvline(media, color=media_color, linestyle='dashed', label=f'Media: {media:.2f}')
+        plt.axvline(median, color= mediana_color, linestyle='dashed', label=f'Median: {median:.2f}')
+        plt.axvline(desv_std, color='y', linestyle='dashed', label=f'Desv_std: {desv_std:.2f}')
+
+        plt.title('Distribución del precio por metros cuadrados')
+        # plt.xlabel('Popularidad')
+        # plt.ylabel('Densidad')
+
+        plt.legend()
+
+        plt.show()
+        # Interpretación de los valores
+
+        print(f"kurtosis: {kurtosis_valor:.2f}")
+        print(f"simetria: {simetria_valor:.2f}")
+
+        if kurtosis_valor > 0:
+            print("La distribución es leptocúrtica, lo que sugiere colas pesadas y picos agudos.")
+        elif kurtosis_valor < 0:
+            print("La distribución es platicúrtica, lo que sugiere colas ligeras y un pico achatado.")
+        else:
+            print("La distribución es mesocúrtica, similar a una distribución normal.")
+
+        if simetria_valor < 0:
+            print("La distribución es asimétrica positiva (sesgo hacia la derecha).")
+        elif simetria_valor > 0:
+            print("La distribución es asimétrica negativa (sesgo hacia la izquierda).")
+        else:
+            print("La distribución es perfectamente simétrica alrededor de su media.")
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
+
+def prueba_grafica_normalidad(data):
+    '''Función para analizar graficamente si una variable tiene una distribución normal'''
+    try: 
+        probplot(data['precio_venta_por_m2'], dist="norm", plot=plt)
+        plt.title(f'Q-Q Plot de Precio de venta por m2')
+        plt.show()
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
+
+def prueba_normalidad_shapiro(data):
+    '''Función para analizar si una variable tiene una distribución normal mediante shapiro'''
+    try:
+        stat, p_value = shapiro(data['precio_venta_por_m2'])
+        print("Estadística de prueba:", stat)
+        print("Valor p:", p_value)
+
+        if p_value < 0.05:
+            print("Rechazamos la hipótesis nula; los datos no siguen una distribución normal.")
+        else:
+            print("No hay suficiente evidencia para rechazar la hipótesis nula; los datos podrían seguir una distribución normal.")
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
+
+def pair_plot(data):
+    '''Funcion para ver graficamente como se comportan algunas de  las variables cuantitativas'''
+    try:
+        df_cuant_pair_plot = data.select_dtypes(include = 'number').drop(columns=['annio_construccion'], axis=1)
+        sns.pairplot(df_cuant_pair_plot, kind='reg', palette='husl', markers='.');
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
+
+def precio_cee(data):
+    '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
+    try: 
+        df_precio_compra_cee = data.groupby('cee', as_index=False).mean(numeric_only = True)
+        ax = sns.catplot(x = 'cee', y='precio_venta_por_m2', hue = 'cee', kind= 'bar',
+        data=df_precio_compra_cee.sort_values(by='cee'), palette='husl');
+        ax.set_xticklabels(df_precio_compra_cee['cee'].sort_values().unique(), rotation=90)
+        plt.title('Relación entre CEE y Precio de venta por metros cuadrados')
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
+
+def precio_tipo_inmueble(data):
+    '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
+    try: 
+        df_precio_compra_tipo_inmueble = data.groupby('tipo_inmueble', as_index=False, sort=True).mean(numeric_only = True)
+        ax = sns.catplot(x= 'tipo_inmueble', y = 'precio_venta_por_m2', data = df_precio_compra_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
+        ax.set_xticklabels(df_precio_compra_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
+        plt.title('Relación entre tipo de inmueble y Precio de venta por metros cuadrados')
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
+
+def tranformacion_numerica(data):
+    '''Función para convertir los booleanos que tenemos en el dataframe en 1 y 0 para poder analizar otras cosas'''
+    try:
+        df_todo_n = data.copy()
+        df_todo_n.replace(False, 0, inplace=True)
+        df_todo_n.replace(True, 1, inplace=True)
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
+    return df_todo_n
+
+def grafico_mapa(data):
+    '''Función para graficar en un mapa las variables de precio venta por m2, por zona y según el tamaño que tienen'''
+    try:
+        fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'metros_cuadrados',
+                        color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
+                        zoom = 3, mapbox_style = 'open-street-map')  
+    except Exception as a:
+        print(f"No pude analizar la variable por {a}")
