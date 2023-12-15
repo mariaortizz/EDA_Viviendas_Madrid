@@ -1,6 +1,6 @@
 # EDA_Viviendas_Madrid
 
-![imagen](./data/imagen.jpg)
+![imagen](./src/data/imagen.jpg)
 
 #### Maria del Rosario Ortiz
 15/12/23
@@ -52,7 +52,7 @@ Después de analizar las variables que más afectan al precio por metro cuadrado
 
 > Mapa que muestra el precio por metro cuadrado y el tamaño de las viviendas
 
-![Alt text](./data/image.png)
+![Alt text](./src/data/image.png)
 
 
 
