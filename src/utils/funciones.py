@@ -431,10 +431,24 @@ def grafico_precio_zona_yvariable(data, variable):
     variable = columa dataframe
     '''
     try:
-        ax = sns.catplot(x = 'zona', y='precio_venta_por_m2', hue = variable, kind= 'bar', palette='husl',
+        ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = variable, kind= 'bar', palette='husl',
             data=data, errorbar = 'sd', errwidth = 1);
-        ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
+        # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
         plt.title(f'Relación entre {variable} y precio de venta por m2 por Zonas')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_precio_zona(data):
+    '''Función para evaluar como aumenta el precio de venta por m2 por zona y otra variable a elegir
+    Input: 
+    data = dataframe
+    variable = columa dataframe
+    '''
+    try:
+        ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = 'zona', kind= 'bar', palette='husl',
+            data=data, errorbar = 'sd', errwidth = 1);
+        # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
+        plt.title(f'Relación entre la zona y precio de venta por m2')
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
