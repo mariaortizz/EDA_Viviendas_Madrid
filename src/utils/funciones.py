@@ -452,6 +452,17 @@ def grafico_precio_zona(data):
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
+def precio_var1(data, variable):
+    '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
+    try: 
+        df_precio_venta_cee = data.groupby(variable, as_index=False).mean(numeric_only = True)
+        ax = sns.catplot(x = 'precio_venta_por_m2', y=variable, hue = variable, kind= 'bar',
+        data=df_precio_venta_cee.sort_values(by=variable), palette='husl');
+        # ax.set_xticklabels(df_precio_venta_cee[variable].sort_values().unique(), rotation=90)
+        plt.title(f'Relación entre {variable} y Precio de venta por metros cuadrados')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
 def grafico_mapa(data):
     '''Función para graficar en un mapa las variables de precio venta por m2, por zona y según el tamaño que tienen'''
     try:
