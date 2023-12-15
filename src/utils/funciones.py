@@ -452,12 +452,12 @@ def grafico_precio_zona(data):
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
-def precio_var1(data, variable):
+def grafico_precio_var1(data, variable):
     '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
     try: 
         df_precio_venta_var = data.groupby(variable, as_index=False).mean(numeric_only = True)
         ax = sns.catplot(y = 'precio_venta_por_m2', x=variable, hue = variable, kind= 'bar',
-        data=df_precio_venta_var)
+        data=df_precio_venta_var, palette= 'husl')
         # ax.set_xticklabels(df_precio_venta_cee[variable].sort_values().unique(), rotation=90)
         plt.title(f'Relación entre {variable} y Precio de venta por metros cuadrados')
     except Exception as a:
@@ -469,5 +469,14 @@ def grafico_mapa(data):
         fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'metros_cuadrados',
                         color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
                         zoom = 3, mapbox_style = 'open-street-map')  
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_heatmap(data):
+    '''Función para graficar en un mapa de calor mostrando las correlaciones entre las variables'''
+    try:
+        plt.figure(figsize=(10,10))
+        sns.heatmap(data.corr(numeric_only=True), robust=True, 
+                    square = True, linewidths = .3)      
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
