@@ -481,3 +481,13 @@ def grafico_heatmap(data):
                     square = True, linewidths = .3)      
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
+
+def grafico_var1_var2(data, var1, var2):
+    '''Función para graficar la relacion de dos variables'''
+    try:
+        plt.figure(figsize=(10, 6))
+        sns.regplot(x=var1, y=var2, data=data, marker='o')
+
+        plt.title(f'Relación entre {var1} y {var2}')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
