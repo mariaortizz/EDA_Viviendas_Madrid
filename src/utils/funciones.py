@@ -475,8 +475,9 @@ def grafico_mapa(data):
 def grafico_heatmap(data):
     '''Función para graficar en un mapa de calor mostrando las correlaciones entre las variables'''
     try:
+        df_cuant = data.select_dtypes(include = 'number')
         plt.figure(figsize=(10,10))
-        sns.heatmap(data.corr(numeric_only=True), robust=True, 
+        sns.heatmap(df_cuant.corr(numeric_only=True), robust=True, 
                     square = True, linewidths = .3)      
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
