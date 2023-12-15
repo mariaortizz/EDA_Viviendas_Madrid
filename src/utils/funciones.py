@@ -380,28 +380,28 @@ def pair_plot(data):
         df_cuant_pair_plot = data.select_dtypes(include = 'number').drop(columns=['annio_construccion', 'latitud', 'longitud'], axis=1)
         sns.pairplot(df_cuant_pair_plot, kind='reg', palette='husl', markers='.');
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
 
 def precio_cee(data):
     '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
     try: 
         df_precio_venta_cee = data.groupby('cee', as_index=False).mean(numeric_only = True)
-        ax = sns.catplot(x = 'cee', y='precio_venta_por_m2', hue = 'cee', kind= 'bar',
+        ax = sns.catplot(x = 'precio_venta_por_m2', y='cee', hue = 'cee', kind= 'bar',
         data=df_precio_venta_cee.sort_values(by='cee'), palette='husl');
         ax.set_xticklabels(df_precio_venta_cee['cee'].sort_values().unique(), rotation=90)
         plt.title('Relación entre CEE y Precio de venta por metros cuadrados')
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
 
 def precio_tipo_inmueble(data):
-    '''Función para ver graficamente la relación que existe entre la letra del certificado energético y el precio de venta por metro cuadrado'''
+    '''Función para ver graficamente la relación que existe entre el tipo de inmueble y el precio de venta por metro cuadrado'''
     try: 
         df_precio_venta_tipo_inmueble = data.groupby('tipo_inmueble', as_index=False, sort=True).mean(numeric_only = True)
-        ax = sns.catplot(x= 'tipo_inmueble', y = 'precio_venta_por_m2', data = df_precio_venta_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
+        ax = sns.catplot(x= 'precio_venta_por_m2', y = 'tipo_inmueble', data = df_precio_venta_tipo_inmueble, kind='bar', hue = 'tipo_inmueble', palette='husl')
         ax.set_xticklabels(df_precio_venta_tipo_inmueble['tipo_inmueble'].sort_values().unique(), rotation = -45)
         plt.title('Relación entre tipo de inmueble y Precio de venta por metros cuadrados')
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
 
 def tranformacion_numerica(data):
     '''Función para convertir los booleanos que tenemos en el dataframe en 1 y 0 para poder analizar otras cosas'''
@@ -413,6 +413,31 @@ def tranformacion_numerica(data):
         print(f"No pude analizar la variable por {a}")
     return df_todo_n
 
+def grafico_precio_habitaciones_yvariable(data, variable):
+    '''Función para evaluar como aumenta el precio de venta por m2 respecto de las habitaciones y otra variable cualitativa a elección
+    Input: 
+    data = dataframe
+    variable = columa dataframe
+    '''
+    try:
+        sns.scatterplot(x= 'habitaciones', y = 'precio_venta_por_m2', data = data, hue = variable, palette='husl')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
+def grafico_precio_zona_yvariable(data, variable):
+    '''Función para evaluar como aumenta el precio de venta por m2 por zona y otra variable a elegir
+    Input: 
+    data = dataframe
+    variable = columa dataframe
+    '''
+    try:
+        ax = sns.catplot(x = 'zona', y='precio_compra_por_m2', hue = variable, kind= 'bar', palette='husl',
+            data=data, errorbar = 'sd', errwidth = 1);
+        ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
+        plt.title(f'Relación entre {variable} y precio de venta por m2 por Zonas')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
 def grafico_mapa(data):
     '''Función para graficar en un mapa las variables de precio venta por m2, por zona y según el tamaño que tienen'''
     try:
@@ -420,4 +445,4 @@ def grafico_mapa(data):
                         color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
                         zoom = 3, mapbox_style = 'open-street-map')  
     except Exception as a:
-        print(f"No pude analizar la variable por {a}")
+        print(f"No pude hacer el gráfico por {a}")
