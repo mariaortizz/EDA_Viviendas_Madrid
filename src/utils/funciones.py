@@ -493,7 +493,7 @@ def grafico_mapa(data, tipo):
     '''Función para graficar en un mapa las variables de precio venta por m2, por zona y según el tamaño que tienen'''
     try:
         if tipo == 't':
-            fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'precio_venta_por_m2',
+            fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'metros_cuadrados',
                             color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
                             zoom = 3, mapbox_style = 'open-street-map')
             fig.show()
