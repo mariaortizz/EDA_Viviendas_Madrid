@@ -252,7 +252,7 @@ def rellenar_bannos_nulos(data):
 def determinacion_zonas(data):
     '''Funcion para subdivir las localizaciones por zonas en base a la longitud y la latitud'''
     try:
-        coordendas = list(zip(df['latitud'].unique(), df['longitud'].unique(), df['ubicacion'].unique()))
+        coordendas = list(zip(data['latitud'].unique(), data['longitud'].unique(), data['ubicacion'].unique()))
         lista_zonas = clasificar_zona(coordendas)
         df_zonas_nuevas = pd.DataFrame(lista_zonas)
         df = pd.merge(data, df_zonas_nuevas, on= 'ubicacion')
