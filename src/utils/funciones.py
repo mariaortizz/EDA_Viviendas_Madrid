@@ -253,7 +253,7 @@ def determinacion_zonas(data):
     '''Funcion para subdivir las localizaciones por zonas en base a la longitud y la latitud'''
     try:
         df_sin_duplicados = data.drop_duplicates(subset=['latitud', 'longitud'])
-        coordendas = list(zip(df_sin_duplicados['ubicacion'],df_sin_duplicados['latitud'], df_sin_duplicados['longitud']))
+        coordendas = list(zip(df_sin_duplicados['latitud'], df_sin_duplicados['longitud'], df_sin_duplicados['ubicacion']))
         lista_zonas = clasificar_zona(coordendas)
         df_zonas_nuevas = pd.DataFrame(lista_zonas)
         df = pd.merge(data, df_zonas_nuevas, on= 'ubicacion')
