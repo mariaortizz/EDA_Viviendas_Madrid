@@ -464,6 +464,20 @@ def grafico_precio_zona_yvariable(data, variable):
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
+def grafico_precio_tipo_inmueble_yvariable(data, variable):
+    '''Función para evaluar como aumenta el precio de venta por m2 por tipo de inmueble y otra variable a elegir
+    Input: 
+    data = dataframe
+    variable = columa dataframe
+    '''
+    try:
+        ax = sns.catplot(x = 'precio_venta_por_m2', y='tipo_inmueble', hue = variable, kind= 'bar', palette='husl',
+            data=data, errorbar = 'sd', err_kws={'linewidth': 1});
+        # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
+        plt.title(f'Relación entre {variable} y precio de venta por m2 por Tipo de inmueble')
+    except Exception as a:
+        print(f"No pude hacer el gráfico por {a}")
+
 def grafico_precio_zona(data):
     '''Función para evaluar como aumenta el precio de venta por m2 por zona y otra variable a elegir
     Input: 
