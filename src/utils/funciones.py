@@ -252,7 +252,7 @@ def rellenar_bannos_nulos(data):
 def determinacion_zonas(data):
     '''Funcion para subdivir las localizaciones por zonas en base a la longitud y la latitud'''
     try:
-        df_sin_duplicados = df.drop_duplicates(subset=['latitud', 'longitud'])
+        df_sin_duplicados = data.drop_duplicates(subset=['latitud', 'longitud'])
         coordendas = list(zip(df_sin_duplicados['ubicacion'],df_sin_duplicados['latitud'], df_sin_duplicados['longitud']))
         lista_zonas = clasificar_zona(coordendas)
         df_zonas_nuevas = pd.DataFrame(lista_zonas)
