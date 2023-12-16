@@ -489,13 +489,19 @@ def grafico_precio_var1(data, variable):
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
-def grafico_mapa(data):
+def grafico_mapa(data, tipo):
     '''Función para graficar en un mapa las variables de precio venta por m2, por zona y según el tamaño que tienen'''
     try:
-        fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'metros_cuadrados',
-                        color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
-                        zoom = 3, mapbox_style = 'open-street-map')
-        fig.show()  
+        if tipo == 't':
+            fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'precio_venta_por_m2',
+                            color = 'precio_venta_por_m2', color_continuous_scale = 'plasma',
+                            zoom = 3, mapbox_style = 'open-street-map')
+            fig.show()
+        elif tipo == 'z':
+            fig = px.scatter_mapbox(data, lat = 'latitud', lon = 'longitud', size = 'precio_venta_por_m2',
+                            color = 'zona', color_continuous_scale = 'plasma',
+                            zoom = 3, mapbox_style = 'open-street-map')
+            fig.show()
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
