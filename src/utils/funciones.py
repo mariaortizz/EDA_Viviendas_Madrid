@@ -250,19 +250,44 @@ def rellenar_bannos_nulos(data):
     return data
 
 def determinacion_zonas(data):
-    '''Funcion para subdivir las localizaciones por zonas'''
+    '''Funcion para subdivir las localizaciones por zonas en base a la longitud y la latitud'''
     try:
-        sur = ['Usera, Madrid', 'Puente de Vallecas, Madrid', 'Carabanchel, Madrid', 'Villaverde, Madrid', 'Puerta Bonita, Madrid', 'Vista Alegre, Madrid', 'San Fermín, Madrid', 'Pradolongo, Madrid', '12 de Octubre-Orcasur, Madrid', 'Almendrales, Madrid', 'Moscardó, Madrid', 'Zofío, Madrid', 'Los Ángeles, Madrid', 'San Cristóbal, Madrid']
-        este = ['Vicálvaro, Madrid', 'Casco Histórico de Vallecas, Madrid', 'Ensanche de Vallecas - La Gavia, Madrid', 'Santa Eugenia, Madrid', 'Orcasitas, Madrid', 'San Diego, Madrid', 'Valdebernardo - Valderribas, Madrid', 'Valdezarza, Madrid', 'Barajas, Madrid', 'Arapiles, Madrid', 'San Juan Bautista, Madrid', 'Prosperidad, Madrid', 'Ciudad Lineal, Madrid', 'Costillares, Madrid', 'Pueblo Nuevo, Madrid', 'Quintana, Madrid']
-        centro = ['Retiro, Madrid', 'Arganzuela, Madrid', 'Chamberí, Madrid', 'Centro, Madrid', 'Malasaña-Universidad, Madrid', 'Palacio, Madrid', 'Sol, Madrid', 'Chueca-Justicia, Madrid', 'Huertas-Cortes, Madrid', 'La Paz, Madrid', 'Recoletos, Madrid', 'Jerónimos, Madrid', 'Atalaya, Madrid', 'Niño Jesús, Madrid', 'Fuentelarreina, Madrid', 'Alameda de Osuna, Madrid', 'Media Legua, Madrid']
-        oeste = ['Moncloa, Madrid', 'Chamartín, Madrid', 'Tetuán, Madrid', 'Argüelles, Madrid', 'Valdemarín, Madrid', 'Ciudad Universitaria, Madrid', 'Nuevos Ministerios-Ríos Rosas, Madrid', 'Aravaca, Madrid', 'Vallehermoso, Madrid', 'Cuatro Caminos, Madrid', 'Ventilla-Almenara, Madrid', 'Sanchinarro, Madrid', 'El Viso, Madrid', 'Ciudad Jardín, Madrid', 'Chopera, Madrid', 'Valdemarín, Madrid', 'Virgen del Cortijo - Manoteras, Madrid']
-        norte = ['Fuencarral, Madrid', 'Peñagrande, Madrid', 'Pilar, Madrid', 'Pinar del Rey, Madrid', 'Canillas, Madrid', 'Tres Olivos - Valverde, Madrid', 'Conde Orgaz-Piovera, Madrid', 'Hortaleza, Madrid', 'Apóstol Santiago, Madrid', 'Nuevos Ministerios-Ríos Rosas, Madrid', 'Arapiles, Madrid', 'Bernabéu-Hispanoamérica, Madrid', 'Prosperidad, Madrid', 'Castilla, Madrid', 'Fuente del Berro, Madrid', 'Media Legua, Madrid']
-
-        funcion_lambda = lambda x: 'sur' if x in sur else ('este' if x in este else ('centro' if x in centro else ('oeste' if x in oeste else 'norte')))
-        data['zona'] = data['ubicacion'].apply(funcion_lambda)
+        coordendas = list(zip(df['latitud'].unique(), df['longitud'].unique(), df['ubicacion'].unique()))
+        lista_zonas = clasificar_zona(coordendas)
+        df_zonas_nuevas = pd.DataFrame(lista_zonas)
+        df = pd.merge(data, df_zonas_nuevas, on= 'ubicacion')
     except Exception as a:
         print(f"No pude transformar el df por {a}")
-    return data
+    return df
+
+def clasificar_zona(coordendas):
+    
+    ''''Función para definir las zonas en base a las coordenadas'''
+
+    sur_range = 40.39
+    norte_range = 40.45
+    centro_range = (40.45, 40.39, -3.65, - 3.72)
+    oeste_range = (40.45, 40.39, -3.72)
+    este_range = (40.45, 40.39, -3.65)
+    
+    lissta_ubica_zona = []
+
+    for i in coordendas:
+        if  i[0] >= norte_range:
+            lissta_ubica_zona.append({'zona': 'norte', 'ubicacion' : i[2]})
+        elif i[0] <= sur_range:
+            lissta_ubica_zona.append({'zona': 'sur', 'ubicacion' : i[2]})
+        # elif centro_range[1] < i[0] < centro_range[0] and centro_range[2] <= i[1] <= centro_range[2]:
+        #     lissta_ubica_zona.append({'zona': 'centro', 'ubicacion' : i[2]})
+        elif este_range[1] < i[0] < este_range[0] and este_range[2] < i[1]:
+            lissta_ubica_zona.append({'zona': 'este', 'ubicacion' : i[2]})
+        elif oeste_range[1] < i[0] < oeste_range[0] and oeste_range[2] > i[1]:
+            lissta_ubica_zona.append({'zona': 'oeste', 'ubicacion' : i[2]})
+        else:
+            lissta_ubica_zona.append({'zona': 'centro', 'ubicacion' : i[2]})
+    
+    return lissta_ubica_zona
+
 
 def obtener_coordenadas(data):
     '''Funcion para asignar coordenadas a las ubicaciones que tenemos en el dataframe'''
