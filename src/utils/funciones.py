@@ -171,7 +171,7 @@ def rellenar_annios_nulos_no_necesitan_reforma(data):
 def rellenar_annio_outlier(data):
     '''Funcion para rellenar un año de construccion incorrecto'''
     media_año_barrio_s = data[(data['ubicacion'] == 'Barrio de Salamanca, Madrid') & (data['annio_construccion'].notna())].sort_values(by = 'annio_construccion').groupby('ubicacion')['annio_construccion'].median(numeric_only = True).astype(int)
-    data['annio_construccion'].replace(8170.0, 1979, inplace= True)
+    data['annio_construccion'].replace(8170.0, 1947, inplace= True)
     return data
 
 def rellenar_pisos_nulos(data):
