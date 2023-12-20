@@ -290,6 +290,69 @@ def clasificar_zona(coordendas):
     return lissta_ubica_zona
 
 
+def zonas_nuevo(data):
+    '''Funcion para subdivir las localizaciones por zonas'''
+    
+    centro = ['Palacio, Madrid', 'Lavapiés-Embajadores, Madrid', 'Huertas-Cortes, Madrid', 'Chueca-Justicia, Madrid', 
+            'Malasaña-Universidad, Madrid', 'Sol, Madrid']
+    arganzuela = ['Imperial, Madrid', 'Acacias, Madrid', 'Chopera, Madrid', 'Legazpi, Madrid', 'Delicias, Madrid', 
+                'Palos de Moguer, Madrid']
+    retiro = ['Pacífico, Madrid', 'Adelfas, Madrid', 'Estrella, Madrid', 'Ibiza, Madrid', 'Jerónimos, Madrid', 'Niño Jesús, Madrid']
+    salamanca = ['Recoletos, Madrid', 'Goya, Madrid', 'Fuente del Berro, Madrid', 'Guindalera, Madrid', 'Lista, Madrid', 'Castellana, Madrid']
+    chamartin = ['El Viso, Madrid', 'Prosperidad, Madrid', 'Ciudad Jardín, Madrid', 'Bernabéu-Hispanoamérica, Madrid', 
+                'Nueva España, Madrid', 'Castilla, Madrid']
+    tetuan = ['Bellas Vistas, Madrid', 'Cuatro Caminos, Madrid', 'Cuzco-Castillejos, Madrid', 'Ventilla-Almenara, Madrid', 
+            'Valdeacederas, Madrid', 'Berruguete, Madrid']
+    chamberi = ['Gaztambide, Madrid', 'Arapiles, Madrid', 'Trafalgar, Madrid', 'Almagro, Madrid', 'Vallehermoso, Madrid']
+    fuencarral_pardo = ['El Pardo, Madrid', 'Fuentelarreina, Madrid', 'Peñagrande, Madrid', 'Pilar, Madrid', 'La Paz, Madrid', 
+                        'Tres Olivos - Valverde, Madrid', 'Mirasierra, Madrid']
+    moncloa_arav = ['Casa de Campo, Madrid', 'Argüelles, Madrid', 'Ciudad Universitaria, Madrid', 'Valdezarza, Madrid', 
+                    'Valdemarín, Madrid', 'El Plantío, Madrid', 'Aravaca, Madrid']
+    latina = ['Los Cármenes, Madrid', 'Puerta del Ángel, Madrid', 'Lucero, Madrid',
+            'Aluche, Madrid','Campamento, Madrid','Cuatro Vientos, Madrid','Las Águilas, Madrid']
+    carabanchel = ['Comillas, Madrid','Opañel, Madrid','San Isidro, Madrid',
+                'Vista Alegre, Madrid','Puerta Bonita, Madrid','Buena Vista, Madrid','Abrantes, Madrid']
+    usera = ['Orcasitas, Madrid','Opañel, Madrid','San Fermín, Madrid',
+            'Almendrales, Madrid','Moscardó, Madrid','Zofío, Madrid','Pradolongo, Madrid']
+    puente_vallecas = ['Entrevías, Madrid','San Diego, Madrid','Palomeras Bajas, Madrid',
+                    'Palomeras sureste, Madrid','Portazgo, Madrid','Numancia, Madrid']
+    moratalaz = ['Pavones, Madrid', 'Horcajo, Madrid', 'Marroquina, Madrid', 'Media Legua, Madrid',
+                'Fontarrón, Madrid', 'Vinateros, Madrid']
+    ciudad_lineal = ['Ventas, Madrid', 'Pueblo Nuevo, Madrid', 'Quintana, Madrid', 'Concepción, Madrid',
+                    'San Pascual, Madrid', 'San Juan Bautista, Madrid', 'Colina, Madrid', 'Atalaya, Madrid', 'Costillares, Madrid']
+    hortaleza = ['Palomas, Madrid', 'Canillas, Madrid', 'Pinar del Rey, Madrid',
+                'Apóstol Santiago, Madrid', 'Valdebebas - Valdefuentes, Madrid']
+    villaverde = ['Villaverde, Madrid', 'San Cristóbal, Madrid', 'Butarque, Madrid', 'Los Rosales, Madrid', 'Los Ángeles, Madrid']
+    villa_vallecas = ['Casco Histórico de Vallecas, Madrid', 'Santa Eugenia, Madrid', 'Ensanche de Vallecas - La Gavia, Madrid']
+    vicalvaro = ['Casco Histórico de Vicálvaro, Madrid', 'Valdebernardo - Valderribas, Madrid', 'El Cañaveral - Los Berrocales, Madrid']
+    barajas = ['Alameda de Osuna, Madrid', 'Casco Histórico de Barajas, Madrid', 'Timón, Madrid']
+
+    try:
+        funcion_lambda = lambda x: 'centro' if x in centro else ('arganzuela' if x in arganzuela else 
+                                                                 ('retiro' if x in retiro else 
+                                                                  ('salamanca' if x in salamanca else 
+                                                                   ('chamartin' if x in chamartin else 
+                                                                    ('tetuan' if x in tetuan else
+                                                                     ('chamberi' if x in chamberi else 
+                                                                      ('fuencarral' if x in fuencarral_pardo else 
+                                                                       ('moncloa' if x in moncloa_arav else 
+                                                                        ('latina' if x in latina else 
+                                                                         ('carabanchel' if x in carabanchel else 
+                                                                          ('usera' if x in usera else 
+                                                                           ('p vallecas' if x in puente_vallecas else 
+                                                                            ('moratalaz' if x in moratalaz else 
+                                                                             ('ciudad_lineal' if x in ciudad_lineal else 
+                                                                              ('hortaleza' if x in hortaleza else 
+                                                                               ('villaverde' if x in villaverde else 
+                                                                                ('v vallecas' if x in villa_vallecas else 
+                                                                                 ('vicalvaro' if x in vicalvaro else 
+                                                                                  ('barajas' if x in barajas else 'REVISAR')))))))))))))))))))
+        data['zona'] = data['ubicacion'].apply(funcion_lambda)
+        return data
+    except Exception as a:
+        print(f"No pude transformar el df por {a} en la función (zonas_nuevas)")
+
+
 def obtener_coordenadas(data):
     '''Funcion para asignar coordenadas a las ubicaciones que tenemos en el dataframe'''
     try: 
