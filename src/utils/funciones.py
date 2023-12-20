@@ -126,7 +126,7 @@ def rellenar_annios_nulos_necesitan_reforma(data):
     '''Función para rellenar los annios que vienen nulos'''
     try:
         #diccionario para ver si tenemos todos las ubicaciones o no
-        dicc_annios_antiguos = data[(data['necesita_reforma'] == True) & (data['annio_construccion'].notna())].groupby('ubicacion')[['annio_construccion']].mean(numeric_only = True).astype(int).reset_index().to_dict('records')
+        dicc_annios_antiguos = data[(data['necesita_reforma'] == True) & (data['annio_construccion'].notna())].sort_values(by = 'annio_construccion').groupby('ubicacion')[['annio_construccion']].median(numeric_only = True).astype(int).reset_index().to_dict('records')
         
         #agrega las ubicaciones que no existen, asignando la media de los inmuebles que necesitan reforma
         dicc_annios_antiguos = dicc_annios_antiguos + [{'ubicacion': 'Horcajo, Madrid', 'annio_construccion': 1957}, 
@@ -150,7 +150,7 @@ def rellenar_annios_nulos_no_necesitan_reforma(data):
     '''Función para rellenar los annios que vienen nulos'''
     try:
         #diccionario para ver si tenemos todos las ubicaciones o no
-        dicc_annios_nuevo = data[(data['necesita_reforma'] == False) & (data['annio_construccion'].notna())].groupby('ubicacion')[['annio_construccion']].mean(numeric_only = True).astype(int).reset_index().to_dict('records')
+        dicc_annios_nuevo = data[(data['necesita_reforma'] == False) & (data['annio_construccion'].notna())].sort_values(by = 'annio_construccion').groupby('ubicacion')[['annio_construccion']].median(numeric_only = True).astype(int).reset_index().to_dict('records')
         
         #agrega las ubicaciones que no existen, asignando la media de los inmuebles que no necesitan reforma
         dicc_annios_nuevo = dicc_annios_nuevo + [{'ubicacion': 'Cuatro Vientos, Madrid', 'annio_construccion': 1973}]
@@ -170,8 +170,8 @@ def rellenar_annios_nulos_no_necesitan_reforma(data):
 
 def rellenar_annio_outlier(data):
     '''Funcion para rellenar un año de construccion incorrecto'''
-    media_año_barrio_s = data[(data['ubicacion'] == 'Barrio de Salamanca, Madrid') & (data['annio_construccion'].notna())].groupby('ubicacion')['annio_construccion'].mean(numeric_only = True).astype(int)
-    data['annio_construccion'].replace(8170.0, 1979, inplace= True)
+    media_año_barrio_s = data[(data['ubicacion'] == 'Barrio de Salamanca, Madrid') & (data['annio_construccion'].notna())].sort_values(by = 'annio_construccion').groupby('ubicacion')['annio_construccion'].median(numeric_only = True).astype(int)
+    data['annio_construccion'].replace(8170.0, 1947, inplace= True)
     return data
 
 def rellenar_pisos_nulos(data):
@@ -363,7 +363,6 @@ def grafico_variable_ppal(data):
         mediana_color = 'b'
         media = data['precio_venta_por_m2'].mean()
         median = data['precio_venta_por_m2'].median()
-        variance = data['precio_venta_por_m2'].var()
         desv_std = data['precio_venta_por_m2'].std()  
         kurtosis_valor = kurtosis(data['precio_venta_por_m2'])
         simetria_valor = skew(data['precio_venta_por_m2'])
@@ -566,7 +565,7 @@ def grafico_var1_var2(data, var1, var2):
     except Exception as a:
         print(f"No pude hacer el gráfico por {a}")
 
-def prueba_corr_separmanr(df, var1, var2):
+def prueba_corr_spearman(df, var1, var2):
     try:
         correlation_coefficient, p_value = spearmanr(df[var1], df[var2])
         print(f"Coeficiente de correlación de Spearman: {correlation_coefficient}")
