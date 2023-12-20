@@ -293,39 +293,40 @@ def clasificar_zona(coordendas):
 def zonas_nuevo(data):
     '''Funcion para subdivir las localizaciones por zonas'''
     
-    centro = ['Palacio, Madrid', 'Lavapiés-Embajadores, Madrid', 'Huertas-Cortes, Madrid', 'Chueca-Justicia, Madrid', 
+    centro = ['Centro, Madrid', 'Palacio, Madrid', 'Lavapiés-Embajadores, Madrid', 'Huertas-Cortes, Madrid', 'Chueca-Justicia, Madrid', 
             'Malasaña-Universidad, Madrid', 'Sol, Madrid']
-    arganzuela = ['Imperial, Madrid', 'Acacias, Madrid', 'Chopera, Madrid', 'Legazpi, Madrid', 'Delicias, Madrid', 
+    arganzuela = ['Arganzuela, Madrid', 'Imperial, Madrid', 'Acacias, Madrid', 'Chopera, Madrid', 'Legazpi, Madrid', 'Delicias, Madrid', 
                 'Palos de Moguer, Madrid']
-    retiro = ['Pacífico, Madrid', 'Adelfas, Madrid', 'Estrella, Madrid', 'Ibiza, Madrid', 'Jerónimos, Madrid', 'Niño Jesús, Madrid']
-    salamanca = ['Recoletos, Madrid', 'Goya, Madrid', 'Fuente del Berro, Madrid', 'Guindalera, Madrid', 'Lista, Madrid', 'Castellana, Madrid']
-    chamartin = ['El Viso, Madrid', 'Prosperidad, Madrid', 'Ciudad Jardín, Madrid', 'Bernabéu-Hispanoamérica, Madrid', 
+    retiro = ['Retiro, Madrid', 'Pacífico, Madrid', 'Adelfas, Madrid', 'Estrella, Madrid', 'Ibiza, Madrid', 'Jerónimos, Madrid', 'Niño Jesús, Madrid']
+    salamanca = ['Barrio de Salamanca, Madrid', 'Recoletos, Madrid', 'Goya, Madrid', 'Fuente del Berro, Madrid', 'Guindalera, Madrid', 'Lista, Madrid', 'Castellana, Madrid']
+    chamartin = ['Chamartín, Madrid','El Viso, Madrid', 'Prosperidad, Madrid', 'Ciudad Jardín, Madrid', 'Bernabéu-Hispanoamérica, Madrid', 
                 'Nueva España, Madrid', 'Castilla, Madrid']
-    tetuan = ['Bellas Vistas, Madrid', 'Cuatro Caminos, Madrid', 'Cuzco-Castillejos, Madrid', 'Ventilla-Almenara, Madrid', 
+    tetuan = ['Tetuán, Madrid', 'Bellas Vistas, Madrid', 'Cuatro Caminos, Madrid', 'Cuzco-Castillejos, Madrid', 'Ventilla-Almenara, Madrid', 
             'Valdeacederas, Madrid', 'Berruguete, Madrid']
-    chamberi = ['Gaztambide, Madrid', 'Arapiles, Madrid', 'Trafalgar, Madrid', 'Almagro, Madrid', 'Vallehermoso, Madrid']
-    fuencarral_pardo = ['El Pardo, Madrid', 'Fuentelarreina, Madrid', 'Peñagrande, Madrid', 'Pilar, Madrid', 'La Paz, Madrid', 
-                        'Tres Olivos - Valverde, Madrid', 'Mirasierra, Madrid']
-    moncloa_arav = ['Casa de Campo, Madrid', 'Argüelles, Madrid', 'Ciudad Universitaria, Madrid', 'Valdezarza, Madrid', 
+    chamberi = ['Nuevos Ministerios-Ríos Rosas, Madrid', 'Chamberí, Madrid','Gaztambide, Madrid', 'Arapiles, Madrid', 'Trafalgar, Madrid', 'Almagro, Madrid', 'Vallehermoso, Madrid']
+    fuencarral_pardo = ['Montecarmelo, Madrid', 'Fuencarral, Madrid','El Pardo, Madrid', 'Fuentelarreina, Madrid', 'Peñagrande, Madrid', 'Pilar, Madrid', 'La Paz, Madrid', 
+                        'Arroyo del Fresno, Madrid','Las Tablas, Madrid','Tres Olivos - Valverde, Madrid', 'Mirasierra, Madrid']
+    moncloa_arav = ['Moncloa, Madrid', 'Casa de Campo, Madrid', 'Argüelles, Madrid', 'Ciudad Universitaria, Madrid', 'Valdezarza, Madrid', 
                     'Valdemarín, Madrid', 'El Plantío, Madrid', 'Aravaca, Madrid']
-    latina = ['Los Cármenes, Madrid', 'Puerta del Ángel, Madrid', 'Lucero, Madrid',
-            'Aluche, Madrid','Campamento, Madrid','Cuatro Vientos, Madrid','Las Águilas, Madrid']
-    carabanchel = ['Comillas, Madrid','Opañel, Madrid','San Isidro, Madrid',
+    latina = ['Latina, Madrid', 'Los Cármenes, Madrid', 'Puerta del Ángel, Madrid', 'Lucero, Madrid',
+            'Águilas, Madrid','Aluche, Madrid','Campamento, Madrid','Cuatro Vientos, Madrid','Las Águilas, Madrid']
+    carabanchel = ['Pau de Carabanchel, Madrid','Carabanchel, Madrid','Comillas, Madrid','Opañel, Madrid','San Isidro, Madrid',
                 'Vista Alegre, Madrid','Puerta Bonita, Madrid','Buena Vista, Madrid','Abrantes, Madrid']
-    usera = ['Orcasitas, Madrid','Opañel, Madrid','San Fermín, Madrid',
+    usera = ['12 de Octubre-Orcasur, Madrid','Usera, Madrid','Orcasitas, Madrid','Opañel, Madrid','San Fermín, Madrid',
             'Almendrales, Madrid','Moscardó, Madrid','Zofío, Madrid','Pradolongo, Madrid']
-    puente_vallecas = ['Entrevías, Madrid','San Diego, Madrid','Palomeras Bajas, Madrid',
+    puente_vallecas = ['Puente de Vallecas, Madrid', 'Entrevías, Madrid','San Diego, Madrid','Palomeras Bajas, Madrid',
                     'Palomeras sureste, Madrid','Portazgo, Madrid','Numancia, Madrid']
-    moratalaz = ['Pavones, Madrid', 'Horcajo, Madrid', 'Marroquina, Madrid', 'Media Legua, Madrid',
+    moratalaz = ['Moratalaz, Madrid', 'Pavones, Madrid', 'Horcajo, Madrid', 'Marroquina, Madrid', 'Media Legua, Madrid',
                 'Fontarrón, Madrid', 'Vinateros, Madrid']
-    ciudad_lineal = ['Ventas, Madrid', 'Pueblo Nuevo, Madrid', 'Quintana, Madrid', 'Concepción, Madrid',
+    ciudad_lineal = ['Ciudad Lineal, Madrid', 'Ventas, Madrid', 'Pueblo Nuevo, Madrid', 'Quintana, Madrid', 'Concepción, Madrid',
                     'San Pascual, Madrid', 'San Juan Bautista, Madrid', 'Colina, Madrid', 'Atalaya, Madrid', 'Costillares, Madrid']
-    hortaleza = ['Palomas, Madrid', 'Canillas, Madrid', 'Pinar del Rey, Madrid',
-                'Apóstol Santiago, Madrid', 'Valdebebas - Valdefuentes, Madrid']
-    villaverde = ['Villaverde, Madrid', 'San Cristóbal, Madrid', 'Butarque, Madrid', 'Los Rosales, Madrid', 'Los Ángeles, Madrid']
-    villa_vallecas = ['Casco Histórico de Vallecas, Madrid', 'Santa Eugenia, Madrid', 'Ensanche de Vallecas - La Gavia, Madrid']
-    vicalvaro = ['Casco Histórico de Vicálvaro, Madrid', 'Valdebernardo - Valderribas, Madrid', 'El Cañaveral - Los Berrocales, Madrid']
-    barajas = ['Alameda de Osuna, Madrid', 'Casco Histórico de Barajas, Madrid', 'Timón, Madrid']
+    hortaleza = ['Sanchinarro, Madrid', 'Hortaleza, Madrid', 'Conde Orgaz-Piovera, Madrid', 'Palomas, Madrid', 'Canillas, Madrid', 'Pinar del Rey, Madrid',
+                'Virgen del Cortijo - Manoteras, Madrid','Apóstol Santiago, Madrid', 'Valdebebas - Valdefuentes, Madrid']
+    villaverde = ['San Andrés, Madrid','Villaverde, Madrid', 'San Cristóbal, Madrid', 'Butarque, Madrid', 'Los Rosales, Madrid', 'Los Ángeles, Madrid']
+    villa_vallecas = ['Villa de Vallecas, Madrid','Casco Histórico de Vallecas, Madrid', 'Santa Eugenia, Madrid', 'Ensanche de Vallecas - La Gavia, Madrid']
+    vicalvaro = ['Vicálvaro, Madrid','Casco Histórico de Vicálvaro, Madrid', 'Valdebernardo - Valderribas, Madrid', 'El Cañaveral - Los Berrocales, Madrid']
+    barajas = ['Campo de las Naciones-Corralejos, Madrid','Barajas, Madrid','Ambroz, Madrid','Alameda de Osuna, Madrid', 'Casco Histórico de Barajas, Madrid', 'Timón, Madrid']
+    
 
     try:
         funcion_lambda = lambda x: 'centro' if x in centro else ('arganzuela' if x in arganzuela else 
