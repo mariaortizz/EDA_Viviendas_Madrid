@@ -249,45 +249,6 @@ def rellenar_bannos_nulos(data):
         print(f"No pude transformar el df por {a}")
     return data
 
-def determinacion_zonas(data):
-    '''Funcion para subdivir las localizaciones por zonas en base a la longitud y la latitud'''
-    try:
-        df_sin_duplicados = data.drop_duplicates(subset=['latitud', 'longitud'])
-        coordendas = list(zip(df_sin_duplicados['latitud'], df_sin_duplicados['longitud'], df_sin_duplicados['ubicacion']))
-        lista_zonas = clasificar_zona(coordendas)
-        df_zonas_nuevas = pd.DataFrame(lista_zonas)
-        df = pd.merge(data, df_zonas_nuevas, on= 'ubicacion')
-    except Exception as a:
-        print(f"No pude transformar el df por {a}")
-    return df
-
-def clasificar_zona(coordendas):
-    
-    ''''Función para definir las zonas en base a las coordenadas'''
-
-    sur_range = 40.39
-    norte_range = 40.45
-    centro_range = (40.45, 40.39, -3.65, - 3.72)
-    oeste_range = (40.45, 40.39, -3.72)
-    este_range = (40.45, 40.39, -3.65)
-    
-    lissta_ubica_zona = []
-
-    for i in coordendas:
-        if  i[0] >= norte_range:
-            lissta_ubica_zona.append({'zona': 'norte', 'ubicacion' : i[2]})
-        elif i[0] <= sur_range:
-            lissta_ubica_zona.append({'zona': 'sur', 'ubicacion' : i[2]})
-        # elif centro_range[1] < i[0] < centro_range[0] and centro_range[2] <= i[1] <= centro_range[2]:
-        #     lissta_ubica_zona.append({'zona': 'centro', 'ubicacion' : i[2]})
-        elif este_range[1] < i[0] < este_range[0] and este_range[2] < i[1]:
-            lissta_ubica_zona.append({'zona': 'este', 'ubicacion' : i[2]})
-        elif oeste_range[1] < i[0] < oeste_range[0] and oeste_range[2] > i[1]:
-            lissta_ubica_zona.append({'zona': 'oeste', 'ubicacion' : i[2]})
-        else:
-            lissta_ubica_zona.append({'zona': 'centro', 'ubicacion' : i[2]})
-    
-    return lissta_ubica_zona
 
 
 def zonas_nuevo(data):
@@ -520,6 +481,7 @@ def grafico_precio_zona_yvariable(data, variable):
     data = dataframe
     variable = columa dataframe
     '''
+    data.sort_values(by= 'precio_venta_por_m2')
     try:
         ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = variable, kind= 'bar', palette='husl',
             data=data, errorbar = 'sd', err_kws={'linewidth': 1});
