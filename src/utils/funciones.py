@@ -511,8 +511,9 @@ def grafico_precio_zona(data):
     variable = columa dataframe
     '''
     try:
+        orden = data.groupby('zona')['precio_venta_por_m2'].mean().sort_values(ascending=False).index
         ax = sns.catplot(x = 'precio_venta_por_m2', y='zona', hue = 'zona', kind= 'bar', palette='husl',
-            data=data, errorbar = 'sd', err_kws={'linewidth': 1});
+            data=data, errorbar = 'sd', err_kws={'linewidth': 1}, order= orden);
         # ax.set_xticklabels(data['zona'].sort_values().unique(), rotation = -45)
         plt.title(f'Relación entre la zona y precio de venta por m2')
     except Exception as a:
